@@ -1,0 +1,31 @@
+body {
+    background-color: #f0f4f8;
+    font-family: 'Noto Nastaliq Urdu', 'Segoe UI', sans-serif;
+}
+
+.custom-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+}
+
+.info-list li {
+    margin-bottom: 6px;
+    line-height: 1.7;
+}
+
+.btn-custom {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+}
+
+.btn-custom:hover {
+    background-color: #45a049;
+}
+
+.form-select {
+    min-width: 120px;
+}

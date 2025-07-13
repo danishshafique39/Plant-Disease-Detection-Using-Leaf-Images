@@ -1,0 +1,88 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="{{ 'ur' if lang == 'ur' else 'en' }}" dir="{{ 'rtl' if lang == 'ur' else 'ltr' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ 'پودوں کی بیماری کی شناخت' if lang == 'ur' else 'Plant Disease Detection' }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+    <style>
+        body {
+            background-color: #f0f4f8;
+            font-family: 'Noto Nastaliq Urdu', 'Segoe UI', sans-serif;
+        }
+        .custom-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+        .info-list li {
+            margin-bottom: 6px;
+        }
+        .btn-custom {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+        }
+        .btn-custom:hover {
+            background-color: #45a049;
+        }
+        .form-select {
+            min-width: 120px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-center flex-fill">{{ '🌿 پودوں کی بیماری کی شناخت' if lang == 'ur' else '🌿 Plant Disease Detection' }}</h2>
+            <form method="get" action="/">
+                <select name="lang" onchange="this.form.submit()" class="form-select w-auto">
+                    <option value="ur" {% if lang == 'ur' %}selected{% endif %}>اردو</option>
+                    <option value="en" {% if lang == 'en' %}selected{% endif %}>English</option>
+                </select>
+            </form>
+        </div>
+
+        <div class="text-center mb-4">
+            <a href="/history?lang={{ lang }}" class="btn btn-outline-secondary">{{ '📜 پچھلی رپورٹس' if lang == 'ur' else '📜 Previous Reports' }}</a>
+        </div>
+
+        {% if prediction %}
+            <div class="custom-card">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="{{ url_for('static', filename='uploads/' + filename) }}" class="img-fluid rounded">
+                    </div>
+                    <div class="col-md-8">
+                        <h4><strong>{{ 'متوقع بیماری:' if lang == 'ur' else 'Predicted Disease:' }}</strong> <span class="text-success">{{ clean_name }}</span></h4>
+                        <p><strong>{{ 'اعتماد:' if lang == 'ur' else 'Confidence:' }}</strong> {{ confidence }}%</p>
+                        {% if info %}
+                        <hr>
+                        <h5>{{ 'بیماری کی تفصیل:' if lang == 'ur' else 'Disease Details:' }}</h5>
+                        <ul class="info-list">
+                            <li><strong>{{ 'وجہ:' if lang == 'ur' else 'Cause:' }}</strong> {{ info['Cause'][lang] }}</li>
+                            <li><strong>{{ 'علامات:' if lang == 'ur' else 'Symptoms:' }}</strong> {{ info['Symptoms'][lang] }}</li>
+                            <li><strong>{{ 'علاج:' if lang == 'ur' else 'Treatment:' }}</strong> {{ info['Treatment'][lang] }}</li>
+                            <li><strong>{{ 'بچاؤ:' if lang == 'ur' else 'Prevention:' }}</strong> {{ info['Prevention'][lang] }}</li>
+                        </ul>
+                        {% endif %}
+                        <a href="/?lang={{ lang }}" class="btn btn-custom mt-3">{{ 'نئی تصویر اپ لوڈ کریں' if lang == 'ur' else 'Upload New Image' }}</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <form action="/predict?lang={{ lang }}" method="POST" enctype="multipart/form-data" class="custom-card">
+                <div class="mb-3">
+                    <label for="image" class="form-label">{{ 'پتے کی تصویر اپ لوڈ کریں:' if lang == 'ur' else 'Upload leaf image:' }}</label>
+                    <input class="form-control" type="file" name="image" required>
+                </div>
+                <button type="submit" class="btn btn-custom">{{ 'تشخیص کریں' if lang == 'ur' else 'Diagnose' }}</button>
+            </form>
+        {% endif %}
+    </div>
+</body>
+</html>

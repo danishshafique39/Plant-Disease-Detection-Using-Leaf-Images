@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="{{ 'ur' if lang == 'ur' else 'en' }}" dir="{{ 'rtl' if lang == 'ur' else 'ltr' }}">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ 'پچھلی پیشن گوئیاں' if lang == 'ur' else 'Prediction History' }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+    <style>
+        body {
+            background-color: #f9f9f9;
+            font-family: 'Noto Nastaliq Urdu', 'Segoe UI', sans-serif;
+        }
+        .history-table {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        th, td {
+            vertical-align: middle !important;
+        }
+        .btn-back {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-back:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-center flex-fill">{{ '📜 پیشن گوئی کی تاریخ' if lang == 'ur' else '📜 Prediction History' }}</h2>
+            <form method="get" action="/history">
+                <select name="lang" onchange="this.form.submit()" class="form-select w-auto">
+                    <option value="ur" {% if lang == 'ur' %}selected{% endif %}>اردو</option>
+                    <option value="en" {% if lang == 'en' %}selected{% endif %}>English</option>
+                </select>
+            </form>
+        </div>
+
+        <div class="table-responsive history-table p-3">
+            <table class="table table-bordered table-hover text-center">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>{{ 'تصویر' if lang == 'ur' else 'Image' }}</th>
+                        <th>{{ 'بیماری' if lang == 'ur' else 'Disease' }}</th>
+                        <th>{{ 'اعتماد' if lang == 'ur' else 'Confidence' }}</th>
+                        <th>{{ 'تاریخ' if lang == 'ur' else 'Date' }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in history %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>
+                            <img src="{{ url_for('static', filename='uploads/' + row[1]) }}" width="80" height="80" class="img-thumbnail">
+                        </td>
+                        <td>{{ row[2] }}</td>
+                        <td>{{ row[3] }}%</td>
+                        <td>{{ row[4] }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5">{{ 'کوئی ریکارڈ نہیں ملا' if lang == 'ur' else 'No records found' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="/?lang={{ lang }}" class="btn btn-back">{{ '🔙 واپس جائیں' if lang == 'ur' else '🔙 Go Back' }}</a>
+        </div>
+    </div>
+</body>
+</html>
